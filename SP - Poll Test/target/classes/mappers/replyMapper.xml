@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sp.dao.ReplyDAO">
+	<select id="reply_list" resultType="ReplyDTO">
+		select
+		*
+		from
+		tbl_reply
+		where bno =
+		#{bno}
+		ORDER BY grpno DESC, grpord asc,depth ASC
+	</select>
+	<select id="count_reply" resultType="int">
+select count(rno) from tbl_reply where bno=#{bno}
+</select>
+	<insert id="insert_reply">
+		insert into tbl_reply (rno, bno, replyer, replytext, regdate,grpno,grpord,depth)
+		values (seq_reply.nextval, #{bno}, #{replyer},#{replytext}, sysdate,seq_grpno.nextval,0,0)
+	</insert>
+	
+	<insert id="insert_reply_re">
+		insert into tbl_reply (rno, bno, replyer, replytext, regdate,grpno,grpord,depth)
+		values (seq_reply.nextval, #{bno}, #{replyer},#{replytext}, sysdate,#{grpno},(select nvl(max(grpord),0)+1 from tbl_reply where grpno=#{grpno}),#{depth}+1)
+	</insert>
+	
+		<insert id="insert_reply_rere">
+		insert into tbl_reply (rno, bno, replyer, replytext, regdate,grpno,grpord,depth)
+		values (seq_reply.nextval, #{bno}, #{replyer},#{replytext}, sysdate,#{grpno},#{grpord}+1,#{depth}+1)
+	</insert>
+
+	<update id="update_reply">
+		update tbl_reply set replytext = #{replytext},
+		regdate = sysdate
+		where rno = #{rno}
+	</update>
+
+<update id="update_reply_re">
+update tbl_reply set grpord=grpord+1
+where grpno=#{grpno} and grpord>#{grpord}
+</update>
+
+	<delete id="delete_reply">
+		delete from tbl_reply where rno =#{rno}
+	</delete>
+	<delete id="deleteBno">
+		delete from tbl_reply where bno =#{bno}
+	</delete>
+	<select id="listPage" resultType="ReplyDTO">
+		<![CDATA[
+		select
+		rno, bno, replytext, replyer, regdate,grpno,grpord,depth
+		from
+		(
+		select /*+INDEX_DESC(tbl_reply pk_reply))*/
+		rownum rn, rno, bno, replytext, replyer, regdate,grpno,grpord,depth
+		from tbl_reply
+		where bno = #{bno}
+		and rno > 0
+		and rownum <= #{pm.page} * #{pm.perPageNum}
+		)
+		where rn > ( #{pm.page} -1) * #{pm.perPageNum} ORDER BY grpno DESC, grpord asc,depth ASC
+		]]>
+	</select>
+ <select id="count" resultType="int">
+ <![CDATA[
+ select 
+   count(bno) 
+ from 
+   tbl_reply 
+ where 
+   bno =#{bno} 
+ ]]>
+ </select>
+</mapper>
+

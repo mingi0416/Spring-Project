@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sp.dao.UploadDAO">
+<select id="getFiles" resultType="UploadDTO">
+select * from tbl_attach where bno = #{bno} order by attno
+</select>
+<delete id="deleteFile">
+delete from tbl_attach where filename = #{filename}
+</delete>
+<delete id="deleteFileAll">
+delete from tbl_attach where bno = #{bno}
+</delete>
+<insert id="addFile">
+insert into tbl_attach(attno, bno, filename) values (attno_counter.nextval, (select max(bno) from tbl_board),#{filename})
+</insert>
+</mapper>
+
+
+
+
+
+
+
+
+
+

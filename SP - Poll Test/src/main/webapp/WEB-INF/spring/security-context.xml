@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://www.springframework.org/schema/security"
+	xmlns:beans="http://www.springframework.org/schema/beans"
+	xsi:schemaLocation="http://www.springframework.org/schema/security 
+	http://www.springframework.org/schema/security/spring-security.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<beans:bean id="loginSuccess" class="com.sp.Handller.LoginRedirectHandler"/>
+
+<!-- URL 설정 -->
+	<http use-expressions="true">
+		<intercept-url pattern="/user/user" access="permitAll" />
+		<intercept-url pattern="/member/**" access="hasAnyRole('MEMBER,ADMIN')" />
+		<intercept-url pattern="/admin/admin" access="hasRole('ADMIN')" />
+		
+		<form-login login-page="/signIn"
+					authentication-success-handler-ref="loginSuccess"
+					default-target-url="/success" 
+		            authentication-failure-url="/signIn?error" 
+		            username-parameter="id" 
+		            password-parameter="pw" />
+		<logout logout-url="/logout" invalidate-session="true"   />
+		<!--해댕주소로오면 session이 지워지고 로그아웃이 진행됨   -->
+		<access-denied-handler error-page="/error" /> 
+	</http>
+
+	<!-- provider -->
+	<authentication-manager>
+		<authentication-provider>
+			<jdbc-user-service data-source-ref="dataSource" 
+			users-by-username-query="select id, pw, 1 from meminfo where id = ?"
+				authorities-by-username-query="select id, authority from authorities where id = ?"
+				/>
+				
+			
+		</authentication-provider>
+	</authentication-manager>
+</beans:beans>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
