@@ -129,5 +129,27 @@ public class BoardModelImpl implements BoardModel {
 		return depth;
 	}
 
+	@Override
+	public BoardDTO select_report(int bno) throws Exception {
+		BoardDAO dao=sqlSession.getMapper(BoardDAO.class);
+		return dao.select_report(bno);
+	}
+
+	@Override
+	public void update_report(int bno) throws Exception {
+		BoardDAO dao=sqlSession.getMapper(BoardDAO.class);
+		
+		dao.update_report(bno);
+		
+	}
+
+	@Override
+	public void delete_reportcnt(int bno) throws Exception {
+		BoardDAO dao=sqlSession.getMapper(BoardDAO.class);
+		
+		dao.delete_reportcnt(bno);
+		
+	}
+
 
 }

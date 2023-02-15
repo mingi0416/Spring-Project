@@ -5,12 +5,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
 <title>Page Title</title>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<!-- <link rel="stylesheet" type="text/css" href="/ex/resources/css/template.css"/> -->
+<link rel="stylesheet" type="text/css" href="/ex/resources/css/template.css"/>
 </head>
 <body>
 
@@ -38,7 +37,3 @@
     <div class="fakeimg" style="height:60px;">Image</div><br>
     <div class="fakeimg" style="height:60px;">Image</div>
   </div>
-  </div>
- 
-
- 

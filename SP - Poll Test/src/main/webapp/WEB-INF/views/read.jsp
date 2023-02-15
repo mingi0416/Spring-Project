@@ -229,7 +229,10 @@ function printPaging(pageMaker){
 		Writer <input type="text" name="writer" style="width: 100%"
 			value="${boardDTO.writer}" readonly="readonly">
 		<h2>
-	
+		<from action="/ex/report" method="get">
+				<input type='hidden' name='bno' value="${boardDTO.bno}"> 
+				<button type="submit" >REPORT</button>
+				</from>
 		<c:if test= '${boardDTO.writer eq writer }'>
 		
 		<button type="submit">ToModify</button>
@@ -255,10 +258,11 @@ function printPaging(pageMaker){
 				</form>
 				
 				
+				
 				<form action="/ex/list" method="get">				
 				<button type="submit">LIST ALL</button>
  				</form>
- 				
+ 			
  				
  				<br>
  				<table border=1>

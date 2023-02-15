@@ -7,11 +7,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.sp.dao.ISPDao;
+import com.sp.dao.PollDAO;
 import com.sp.dao.UploadDAO;
+import com.sp.dto.PollDTO;
 import com.sp.dto.UploadDTO;
 
 @Service
-public class UploadServiceImpl implements UploadService {
+public class PollServiceImpl implements PollService {
 
 	@Autowired
 	private SqlSession sqlSession;
@@ -25,9 +27,9 @@ public class UploadServiceImpl implements UploadService {
 	}
 
 	@Override
-	public void addFile(String filename) throws Exception {
-		UploadDAO dao = sqlSession.getMapper(UploadDAO.class);
-		dao.addFile(filename);
+	public void addPoll(PollDTO poll) throws Exception {
+		PollDAO dao = sqlSession.getMapper(PollDAO.class);
+		dao.addPoll(poll);
 	}
 
 	@Override

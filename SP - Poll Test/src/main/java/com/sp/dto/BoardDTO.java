@@ -12,13 +12,15 @@ public class BoardDTO {
 	private int grpno;
 	private int grpord;
 	private int depth;
+	private int report;
 	
 	public BoardDTO() {
 
 	}
 	
+	
 	public BoardDTO(int bno, String title, String content, String writer, Date regdate, int viewcnt, int grpno,
-			int grpord, int depth) {
+			int grpord, int depth, int report) {
 		super();
 		this.bno = bno;
 		this.title = title;
@@ -29,7 +31,25 @@ public class BoardDTO {
 		this.grpno = grpno;
 		this.grpord = grpord;
 		this.depth = depth;
+		this.report = report;
 	}
+
+
+
+
+
+
+
+	public int getReport() {
+		return report;
+	}
+
+
+	public void setReport(int report) {
+		this.report = report;
+	}
+
+
 	public int getgrpno() {
 		return grpno;
 	}
@@ -88,7 +108,7 @@ public class BoardDTO {
 	public String toString() {
 		return "BoardDTO [bno=" + bno + ", title=" + title + ", content=" + content + ", writer=" + writer
 				+ ", regdate=" + regdate + ", viewcnt=" + viewcnt + ", grpno=" + grpno + ", grpord=" + grpord
-				+ ", depth=" + depth + "]";
+				+ ", depth=" + depth + ", report=" + report + "]";
 	}
 	
 

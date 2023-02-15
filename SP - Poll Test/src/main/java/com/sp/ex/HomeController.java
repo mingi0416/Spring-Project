@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -18,6 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -33,11 +35,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.sp.dto.BoardDTO;
+import com.sp.dto.PollDTO;
 import com.sp.dto.ReplyDTO;
 import com.sp.dto.SPDto;
 import com.sp.dto.UploadDTO;
 import com.sp.service.BoardModel;
 import com.sp.service.ISPService;
+import com.sp.service.PollService;
 import com.sp.service.ReplyService;
 import com.sp.service.UploadService;
 import com.sp.vo.PageMaker;
@@ -53,6 +57,8 @@ public class HomeController {
 	  private BoardModel bm;
 	@Inject
 	  private ReplyService rs;
+	@Inject
+	  private PollService ps;
 	@Autowired
 	private ISPService service;
 	@Autowired
@@ -198,14 +204,23 @@ public class HomeController {
 		System.out.println(writer);
 		model.addAttribute("writer",writer);
 		
+		
 		return "write";
 	}
-	
+
 	@RequestMapping(value = "/write", method = RequestMethod.POST)
-	public String write(Locale locale, BoardDTO vo, MultipartFile[] file) throws Exception {
+	public String write(Locale locale, BoardDTO vo,PollDTO po, MultipartFile[] file,@RequestParam("item") String[] itemList) throws Exception {
 		logger.info("Success write", locale);
 		bm.write(vo);
 		
+		for(String item : itemList) {
+			PollDTO dto = po;
+			System.out.println(po);
+			dto.setItem(item);;
+			System.out.println("투표:"+dto);
+			ps.addPoll(dto);
+		}
+		System.out.println(po);
 
 		SimpleDateFormat formatter = new SimpleDateFormat("YYYYMM");
 		Calendar now = Calendar.getInstance();
@@ -241,7 +256,24 @@ public class HomeController {
 		return "redirect:/success";
 	}
 	
+	@RequestMapping(value = "/writepoll", method = RequestMethod.GET)
+	public String writepoll(String endtime,@RequestParam("item") String[] itemList
+			,Locale locale, BoardDTO vo,PollDTO po, MultipartFile[] file) throws Exception {
+		logger.info("Success write", locale);
 	
+		for(String item : itemList) {
+			PollDTO dto = po;
+			dto.setItem(item);;
+			System.out.println("투표:"+dto);
+			ps.addPoll(dto);
+		}
+	
+		
+
+
+
+		return "redirect:/success";
+	}
 	
 //	@RequestMapping(value = "/write", method = RequestMethod.GET)
 //	public String write(Locale locale, BoardDTO vo) throws Exception {
@@ -252,6 +284,29 @@ public class HomeController {
 //		return "redirect:/success";
 //	}
 //	
+	@RequestMapping(value = "/toMakePoll", method = RequestMethod.GET)
+	public String toMakePoll(Locale locale, Model model,Authentication authentication) {
+		logger.info("To Poll Page", locale);
+		UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken)authentication;
+		String writer = token.getName();
+		System.out.println(writer);
+		model.addAttribute("writer",writer);
+		
+		return "poll";
+	}
+	
+	@RequestMapping(value = "/makePoll", method = RequestMethod.GET)
+	public String makePoll(@RequestParam("pollTitle") String polltitle,@RequestParam("endtime") String endtime,@RequestParam("item") String[] item,Locale locale, Model model,Authentication authentication) {
+		logger.info("Make Poll Success", locale);
+		model.addAttribute("polltitle",polltitle);
+		model.addAttribute("endtime",endtime);
+		for(String itemlist:item) {
+			System.out.println(itemlist);
+		}
+		model.addAttribute("item",item);
+		System.out.println(item);
+		return "write";
+	}
 	
 	
 	@RequestMapping(value = "/toRewrite", method = RequestMethod.GET)
@@ -275,7 +330,13 @@ public class HomeController {
 		return "redirect:/success";
 	}
 	
-	
+	@RequestMapping(value = "/report", method = RequestMethod.GET)
+	public String report(Locale locale, @RequestParam("bno") int bno) throws Exception {
+		logger.info("Success report", locale);
+		bm.update_report(bno);
+		System.out.println(bno);
+		return "redirect:/success";
+	}
 	@RequestMapping(value = "/toModify", method = RequestMethod.GET)
 	public String toModify(Locale locale,BoardDTO board, PageMaker pm,Model model) throws Exception {
 		logger.info("To Modify Page", locale);

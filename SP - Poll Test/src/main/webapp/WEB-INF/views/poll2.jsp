@@ -29,13 +29,13 @@ function moveandclose(){
 
 
 const add_textbox = () => {
-    const box = document.getElementById("pollList");
+    const box = document.getElementById("box");
     const newP = document.createElement('tr');
     newP.innerHTML = "<td><input type='text' name='item' placeholder='보기'></td><input type='button' value='삭제' onclick='remove(this)'>";
     box.appendChild(newP);
 }
 const remove = (obj) => {
-    document.getElementById('pollList').removeChild(obj.parentNode);
+    document.getElementById('box').removeChild(obj.parentNode);
 }
  
 function additem() {
@@ -87,13 +87,12 @@ console.log(max)
 </table>
 </form>
 
-    <script>
+ <script>
         function setParentText(){
         	opener.document.getElementById("pollTitle").value = document.getElementById("cpollTitle").value
         	opener.document.getElementById("endtime").value = document.getElementById("cendtime").value
-        	
-        	opener.test(document.getElementsByName("item"))
+      		console.log('누름');
         }
-    </script>
+ </script>
 </body>
 </html>
