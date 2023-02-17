@@ -6,6 +6,32 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 <script>
+window.onload = function(){
+var test1 = opener.document.getElementById("pollTitle").value
+document.getElementById("cpollTitle").value = test1
+var test2 = opener.document.getElementById("endtime").value
+document.getElementById("cendtime").value = test2
+var test3 = opener.document.getElementsByName("item")
+console.log(test1)
+console.log(test2)
+test(test3)
+
+function test(temp){
+	var str = '';
+	for(var i=0; i< (temp.length-2);i++){
+		add_textbox()
+	}
+	for(var i=0; i < temp.length; i++){
+		document.getElementsByName('item')[i].value = temp[i].value
+	}
+	//document.getElementById('pollList').innerHTML= str
+};
+};
+
+//
+
+
+
 
 function goSubmit() {
     window.opener.name = "parentPage"; // 부모창의 이름 설정
@@ -42,49 +68,38 @@ function additem() {
 max= max+1;
 console.log(max)
 }
+
+
 </script>
 </head>
 <body>
 <!-- <form name = "myForm" method="get"> -->
 <form action="/ex/writepoll" method="get">
-<table>
-<thead>
-<tr>
+
+
 <td colspan=2>투표만들기</td>
-</tr>
-
-<tr>
-<tbody id="pollList">
-<td><input type="text" id="cpollTitle" name="pollTitle" placeholder="투표 제목"></td>
-<td><label for="endtime">종료시간</label><input type="datetime-local" id="cendtime" name="endtime"></td>
-</tr>
-</thead>
 
 
-<tr>
-<td>
+
+
+<input type="text" id="cpollTitle" name="pollTitle" placeholder="투표 제목">
+<label for="endtime">종료시간</label><input type="datetime-local" id="cendtime" name="endtime">
+
+
+
+
+
+<input type="text" name="item" placeholder="보기"><br>
 <input type="text" name="item" placeholder="보기">
-</td>
-</tr>
-<tr>
-<td>
-<input type="text" name="item" placeholder="보기">
-</td>
-</tr>
+<div id="pollList">
+
+</div>
 
 
+<button type="button" onclick="add_textbox()">보기추가</button>
 
-</tbody>
-<tfoot>
-<tr>
-<td>
-<button type="button" onclick="add_textbox()">보기추가</button></td>
-<td><button type="submit">등록123</button></td>
-<td><button type="button" onclick= "setParentText()">등록</button></td>
-<td><button type="button" onclick="closeTabClick()">닫기</button></td>
-</tr>
-</tfoot>
-</table>
+<button type="button" onclick= "setParentText()">등록</button>
+
 </form>
 
     <script>
@@ -93,6 +108,8 @@ console.log(max)
         	opener.document.getElementById("endtime").value = document.getElementById("cendtime").value
         	
         	opener.test(document.getElementsByName("item"))
+        	console.log(document.getElementsByName("item"))
+        	window.close();
         }
     </script>
 </body>

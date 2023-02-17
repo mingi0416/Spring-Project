@@ -31,7 +31,13 @@ public class UploadServiceImpl implements UploadService {
 	}
 
 	@Override
-	public void deleteFile(String filename) throws Exception {
+	public void modifyadd(UploadDTO dto) throws Exception {
+		UploadDAO dao = sqlSession.getMapper(UploadDAO.class);
+		dao.modifyadd(dto);
+	}
+	
+	@Override
+	public void deleteFile(int filename) throws Exception {
 		UploadDAO dao = sqlSession.getMapper(UploadDAO.class);
 		dao.deleteFile(filename);
 

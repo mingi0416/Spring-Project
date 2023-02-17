@@ -13,20 +13,10 @@
      
      // window.open("open할 window", "자식창 이름", "팝업창 옵션");
      openWin = window.open("/ex/toMakePoll", "childForm", "width=570, height=350, resizable = no, scrollbars = no");    
- 	// openWin.focus();
- }
+ 	// openWin.focus();opener.document.getElementById("pollTitle").value = document.getElementById("cpollTitle").value
  
-function fn_makePoll() {
-	window.name = "parentForm";
-	openWin = window.open("/ex/toMakePoll", "childForm", 'width=600, height=400, fullscreen=no scrollbars=no, status=yes');
-	//window.open("/ex/toMakePoll", "_blank", 'width=600, height=400, fullscreen=no scrollbars=no, status=yes');
-	}
-	
-function setChildText(){
-    openWin.document.getElementById("cPolltitle").value = document.getElementById("pPolltitle").value;
-    openWin.document.getElementById("cItem").value = document.getElementById("pItem").value;
-    openWin.document.getElementById("cEndtime").value = document.getElementById("pEndtime").value;
-}
+ }
+
 
 function test(temp){
 	var str = '';
@@ -64,11 +54,12 @@ function test(temp){
 		<h2> 내용 
 	<button type="button" onclick="openChild()">투표</button>
 	    <input type="button" value="자식창 열기" onclick="openChild()">
+	        <input type="button" value="전달" onclick="setChildText()">
 			<div id="poll">
-			<input type="text" id="pollTitle" name="pollTitle"/>
-			<input type="datetime-local" id="endtime" name="endtime"/>
+			<input type="text" id="pollTitle" name="pollTitle" readonly/>
+			<input type="datetime-local" id="endtime" name="endtime" readonly/>
 			<div id="pollitem">
-			<input type="text" name="item"/>
+			<input type="text" name="item" readonly/>
 			</div> 
 			</div> 
 			<textarea name="content" rows="8" style="width:100%"

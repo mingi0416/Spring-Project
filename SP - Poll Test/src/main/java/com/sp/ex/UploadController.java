@@ -211,21 +211,22 @@ public class UploadController {
 
 	@ResponseBody
 	@RequestMapping(value = "/deleteFile", method = RequestMethod.POST)
-	public ResponseEntity<String> deleteFile(String fileName) {
+	public ResponseEntity<String> deleteFile(int fileName) {
 
-		System.out.println("delete file: " + fileName);
-
-		String formatName = fileName.substring(fileName.lastIndexOf(".") + 1).toUpperCase();
-
-		if (formatName.equals("JPG") || formatName.equals("PNG") || formatName.equals("GIF")) {
-			System.out.println(uploadPath + fileName.replace("s_", ""));
-			new File(uploadPath + fileName.replace("s_", "")).delete();
-
-		} else {
-
-		}
-
-		new File(uploadPath + fileName).delete();
+//		System.out.println("delete file: " + fileName);
+//
+//		String formatName = fileName.substring(fileName.lastIndexOf(".") + 1).toUpperCase();
+//
+//		if (formatName.equals("JPG") || formatName.equals("PNG") || formatName.equals("GIF")) {
+//			System.out.println(uploadPath + fileName.replace("s_", ""));
+//			new File(uploadPath + fileName.replace("s_", "")).delete();
+//
+//		} else {
+//
+//		}
+//
+//		new File(uploadPath + fileName).delete();
+		System.out.println(fileName);
 		return new ResponseEntity<String>("deleted", HttpStatus.OK);
 	}
 	

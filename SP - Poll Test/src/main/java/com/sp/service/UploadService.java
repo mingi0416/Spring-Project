@@ -13,7 +13,9 @@ public interface UploadService {
 
 	  public void addFile(String filename) throws Exception;
 
-	  public void deleteFile(String filename) throws Exception;
+	  public void modifyadd(UploadDTO dto) throws Exception;
+	  
+	  public void deleteFile(int attno) throws Exception;
 	  
 	  public void deleteFileAll(int bno) throws Exception;
 }

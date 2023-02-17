@@ -7,13 +7,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 select * from tbl_attach where bno = #{bno} order by attno
 </select>
 <delete id="deleteFile">
-delete from tbl_attach where filename = #{filename}
+delete from tbl_attach where attno = #{attno}
 </delete>
 <delete id="deleteFileAll">
 delete from tbl_attach where bno = #{bno}
 </delete>
 <insert id="addFile">
 insert into tbl_attach(attno, bno, filename) values (attno_counter.nextval, (select max(bno) from tbl_board),#{filename})
+</insert>
+<insert id="modifyadd">
+insert into tbl_attach(attno, bno, filename) values (attno_counter.nextval, #{bno},#{filename})
 </insert>
 </mapper>
 

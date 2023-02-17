@@ -7,12 +7,12 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 public class PollDTO {
 	private int bno;
-	private int pno;
+	private String pno;
 	   @DateTimeFormat(pattern="yyyy-MM-dd'T'HH:mm")
 	   private LocalDateTime endtime;
 	private String pollTitle;
 	private String item;
-	private int vote_cnt;
+	private String vote_cnt;
 	
 	public PollDTO() {
 	}
@@ -24,8 +24,13 @@ public class PollDTO {
 		this.item = item;
 	}
 
-
-	public PollDTO(int bno, int pno, LocalDateTime endtime, String pollTitle, String item, int vote_cnt) {
+	public PollDTO(int bno, String item) {
+		super();
+		this.bno = bno;
+		this.item = item;
+	}
+	
+	public PollDTO(int bno, String pno, LocalDateTime endtime, String pollTitle, String item, String vote_cnt) {
 		super();
 		this.bno = bno;
 		this.pno = pno;
@@ -51,11 +56,11 @@ public class PollDTO {
 		this.bno = bno;
 	}
 
-	public int getPno() {
+	public String getPno() {
 		return pno;
 	}
 
-	public void setPno(int pno) {
+	public void setPno(String pno) {
 		this.pno = pno;
 	}
 
@@ -83,14 +88,13 @@ public class PollDTO {
 		this.item = item;
 	}
 
-	public int getVote_cnt() {
+	public String getVote_cnt() {
 		return vote_cnt;
 	}
 
-	public void setVote_cnt(int vote_cnt) {
+	public void setVote_cnt(String vote_cnt) {
 		this.vote_cnt = vote_cnt;
 	}
 
-	
 	
 }

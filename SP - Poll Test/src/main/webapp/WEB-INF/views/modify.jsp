@@ -162,10 +162,59 @@ function printPaging(pageMaker){
 }
 
 
+let openWin;
+
+function openChild() {
+    // window.name = "부모창 이름"; 
+    window.name = "parentForm";
+    
+    // window.open("open할 window", "자식창 이름", "팝업창 옵션");
+    openWin = window.open("/ex/toMakePoll", "childForm", "width=570, height=350, resizable = no, scrollbars = no");    
+	// openWin.focus();
+}
+
+function fn_makePoll() {
+	window.name = "parentForm";
+	openWin = window.open("/ex/toMakePoll", "childForm", 'width=600, height=400, fullscreen=no scrollbars=no, status=yes');
+	//window.open("/ex/toMakePoll", "_blank", 'width=600, height=400, fullscreen=no scrollbars=no, status=yes');
+	}
+	
+function setChildText(){
+   openWin.document.getElementById("cPolltitle").value = document.getElementById("pPolltitle").value;
+   openWin.document.getElementById("cItem").value = document.getElementById("pItem").value;
+   openWin.document.getElementById("cEndtime").value = document.getElementById("pEndtime").value;
+}
+
+function test(temp){
+	var str = '';
+	for(var i=0; i < temp.length; i++){
+		str+='<input type="text" name="item" value="'+temp[i].value+'"/>'
+		console.log(temp[i].value);
+	}
+	document.getElementById('pollitem').innerHTML= str
+};
+
+
+function deleteimg(num) {
+
+	  const div = document.getElementById(num);
+	   success:div.remove();
+	  const box = document.getElementById("deleteList");
+	    const newP = document.createElement('p');
+	    newP.innerHTML = "<input type='hidden' name='deleteattno' value='"+num+"'/>";
+	    box.appendChild(newP);
+}
+
 </script>
+<style>
+div{
+float:left;
+}
+</style>
+	<form action="/ex/modify" method="post" enctype="multipart/form-data" target="zeroFrame">
 
-	<form action="/ex/modify" method="get">
-
+		<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+		
 		<input type='hidden' name='bno' value="${boardDTO.bno}"> <input
 			type='hidden' name='page' value="${pageMaker.page}"> <input
 			type='hidden' name='perPageNum' value="${pageMaker.perPageNum}">
@@ -181,7 +230,32 @@ function printPaging(pageMaker){
 		<input type="text" name='title' style="width: 100%"
 			value="${boardDTO.title}" >
 	</h2>
+		<h2>Image</h2>
+		<input type='file' multiple="multiple" name='file'>
+	<div id="deleteList">
 
+	</div>
+		<c:forEach var="imageList" items="${imageList }">
+			<input type="hidden" name="attno" value="${imageList.attno }">
+				<div id='${imageList.attno }'>
+				<img src='/ex/displayFile?fileName=/${imageList.filename }' style="width:200px; height:200px;" />
+				<br><input type="button" onclick="deleteimg(${imageList.attno })" value="X">
+
+				</div>
+		</c:forEach>
+<h2>poll</h2>
+	    <input type="button" value="자식창 열기" onclick="openChild()">
+			<div id="poll">
+			<input type="text" id="pollTitle" name="pollTitle" value="${pollTitle }"/>
+			
+			<input type="datetime-local" id="endtime" name="endtime" value="${endtime }"/><br>
+			<div id="pollitem">
+				<c:forEach var="pollList" items="${pollList }">
+							<input type="hidden" name="pno" value="${pollList.pno }">
+							<input type="text" name="item" value="${pollList.item }">
+							<input type="text" name="vote_cnt" value="${pollList.vote_cnt }" readonly><br>
+										</c:forEach>
+<div id="footer">
 	<h2>
 		Content
 		<textarea style="width: 100%" name="content" rows="3"
@@ -198,6 +272,10 @@ function printPaging(pageMaker){
 				<form action="/ex/list" method="get">
 				<button type="submit">LIST ALL</button>
 				</form>
+				
+
+			</div> 
+			</div> 
 			<!-- /.box-body 
 			<div class="box-footer">
 				<button type="submit" class="btnModify">Modify</button>

@@ -4,6 +4,7 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ page session="false"%>
 
+
 <script>
 	var bno="${boardDTO.bno}";
 	var page=1;
@@ -194,31 +195,32 @@ function printPaging(pageMaker){
 </script>
 
 <form action="/ex/toModify" method="get">
-			
-		<input type='hidden' name='bno' value="${boardDTO.bno}"> <input
-			type='hidden' name='page' value="${pageMaker.page}"> <input
-			type='hidden' name='perPageNum' value="${pageMaker.perPageNum}">
-		<input type='hidden' name='searchType' value="${pageMaker.searchType}">
-		<input type='hidden' name='keyword' value="${pageMaker.keyword}">
+
+	<input type='hidden' name='bno' value="${boardDTO.bno}"> <input
+		type='hidden' name='page' value="${pageMaker.page}"> <input
+		type='hidden' name='perPageNum' value="${pageMaker.perPageNum}">
+	<input type='hidden' name='searchType' value="${pageMaker.searchType}">
+	<input type='hidden' name='keyword' value="${pageMaker.keyword}">
 
 
 
-	
+
+
 	<h1>This is a Read page</h1>
 	<h2>
-		Title
-		<input type="text" name='title' style="width: 100%"
+		Title <input type="text" name='title' style="width: 100%"
 			value="${boardDTO.title}" readonly="readonly">
 	</h2>
 
 	<h2>
 		Image
-			<c:forEach var="imageList" items="${imageList }">
+		<c:forEach var="imageList" items="${imageList }">
 			<div>
-			<img src='/ex/displayFile?fileName=/${imageList.filename }'/></div>
-			</c:forEach>
+				<img src='/ex/displayFile?fileName=/${imageList.filename }' />
+			</div>
+		</c:forEach>
 	</h2>
-	
+
 	<h2>
 		Content
 		<textarea style="width: 100%" name="content" rows="3"
@@ -229,146 +231,197 @@ function printPaging(pageMaker){
 		Writer <input type="text" name="writer" style="width: 100%"
 			value="${boardDTO.writer}" readonly="readonly">
 		<h2>
-		<from action="/ex/report" method="get">
-				<input type='hidden' name='bno' value="${boardDTO.bno}"> 
-				<button type="submit" >REPORT</button>
-				</from>
-		<c:if test= '${boardDTO.writer eq writer }'>
-		
-		<button type="submit">ToModify</button>
-				
-				</c:if>
-				</form>
-				
-				<form action="/ex/toRewrite" method="get">	
-		<input type='hidden' name='grpno' value="${boardDTO.grpno}">
-				<input type='hidden' name='depth' value="${boardDTO.depth}"> 	
-				<input type="hidden" name='grpord' value="${boardDTO.grpord }">
-				<button type="submit">답글</button>
- 				</form>
- 				
- 				
-				<form action="/ex/remove" method="get">
-			<c:if test= '${boardDTO.writer eq writer || authority eq "ADMIN" }'>
-				
-				<input type='hidden' name='bno' value="${boardDTO.bno}"> 
-				<button type="submit" >REMOVE</button>
-				
-				</c:if>
-				</form>
-				
-				
-				
-				<form action="/ex/list" method="get">				
-				<button type="submit">LIST ALL</button>
- 				</form>
- 			
- 				
- 				<br>
- 				<table border=1>
-				<thead colspan="4">댓글목록</thead>
-				<tbody>
+			<from action="/ex/report" method="get"> <input type='hidden'
+				name='bno' value="${boardDTO.bno}">
+			<button type="submit">REPORT</button>
+			</from>
+			<c:if test='${boardDTO.writer eq writer }'>
 
-				<tr>
-				<form action="/ex/insert_reply">
-				<td>
-				<input type="text" name="replyer" value="${writer }" readonly>
-				</td>
-				<td colspan="2">
-				<input type="text" name="replytext" placeholder="댓글내용" required>
-				</td>
-				<td>
-				<input type='hidden' name='bno' value="${boardDTO.bno}"> 
+				<button type="submit">ToModify</button>
+
+			</c:if>
+</form>
+
+<form action="/ex/toRewrite" method="get">
+	<input type='hidden' name='grpno' value="${boardDTO.grpno}"> <input
+		type='hidden' name='depth' value="${boardDTO.depth}"> <input
+		type="hidden" name='grpord' value="${boardDTO.grpord }">
+	<button type="submit">답글</button>
+</form>
+
+
+<form action="/ex/remove" method="get">
+	<c:if test='${boardDTO.writer eq writer || authority eq "ADMIN" }'>
+
+		<input type='hidden' name='bno' value="${boardDTO.bno}">
+		<button type="submit">REMOVE</button>
+
+	</c:if>
+</form>
+
+
+
+<form action="/ex/list" method="get">
+	<button type="submit">LIST ALL</button>
+</form>
+
+
+<br>
+<table border=1>
+	<thead colspan="4">댓글목록
+	</thead>
+	<tbody>
+
+		<tr>
+			<form action="/ex/insert_reply">
+				<td><input type="text" name="replyer" value="${writer }"
+					readonly></td>
+				<td colspan="2"><input type="text" name="replytext"
+					placeholder="댓글내용" required></td>
+				<td><input type='hidden' name='bno' value="${boardDTO.bno}">
 					<button type="submit">댓글등록</button>
-				</form>
-				</td>
-				</tr>
+			</form>
+			</td>
+		</tr>
 
 
-				<c:forEach var="replyList" items="${replyList }">
-				<tr>
-				
-				
+		<c:forEach var="replyList" items="${replyList }">
+			<tr>
+
+
 				<form action="/ex/update_reply" method="get">
-				<td><input type="text" name="replyer" value="${replyList.replyer }" readonly></td>
-				<c:choose>
-				<c:when test='${replyList.replyer eq writer }'>
-				<td width="200px">
-
-				<input type='hidden' name='rno' value="${replyList.rno}" >
-				<input type='hidden' name='bno' value="${boardDTO.bno}">
-				
-				<textarea id="after_update${replyList.rno }" name="replytext" style="display:none">${replyList.replytext }</textarea>
-				<button id="savebutton${replyList.rno }" type="submit" style="display:none">저장</button>				
+					<td><input type="text" name="replyer"
+						value="${replyList.replyer }" readonly></td>
+					<c:choose>
+						<c:when test='${replyList.replyer eq writer }'>
+							<td width="200px"><input type='hidden' name='rno'
+								value="${replyList.rno}"> <input type='hidden'
+								name='bno' value="${boardDTO.bno}"> <textarea
+									id="after_update${replyList.rno }" name="replytext"
+									style="display: none">${replyList.replytext }</textarea>
+								<button id="savebutton${replyList.rno }" type="submit"
+									style="display: none">저장</button>
 				</form>
-				<button onclick="fn_return(${replyList.rno })" id="cancelbutton${replyList.rno }" type="button" style="display:none">취소</button>
-				<p id="before_update${replyList.rno }" ><c:if test="${replyList.depth > 0}">
-                        <c:forEach begin="1" end="${replyList.depth}">
+				<button onclick="fn_return(${replyList.rno })"
+					id="cancelbutton${replyList.rno }" type="button"
+					style="display: none">취소</button>
+				<p id="before_update${replyList.rno }">
+					<c:if test="${replyList.depth > 0}">
+						<c:forEach begin="1" end="${replyList.depth}">
                            &nbsp; 
                         </c:forEach>
                         └RE:
-                    </c:if>  ${replyList.replytext }</p>
-				
+                    </c:if>
+					${replyList.replytext }
+				</p>
+
 				</td>
 				</c:when>
 				<c:otherwise>
-				<td> <p>${replyList.replytext }</p></td>
+					<td>
+						<p>${replyList.replytext }</p>
+					</td>
 				</c:otherwise>
 				</c:choose>
-				
-				<td><fmt:formatDate pattern="yyyy-MM-dd HH:mm" value="${replyList.regdate }"/></td>
-				<td>
-		
-		<c:if test= '${replyList.replyer eq writer }'>
-		 	<%--  --%>
-			<button type="button" onclick="fn_update_re(${replyList.rno })">수정</button>	
-		</c:if>
-		</form>
 
-		<button type="button" onclick="fn_toReply_re(${replyList.rno })" id="testbtn">답글</button>
+				<td><fmt:formatDate pattern="yyyy-MM-dd HH:mm"
+						value="${replyList.regdate }" /></td>
+				<td><c:if test='${replyList.replyer eq writer }'>
+						<%--  --%>
+						<button type="button" onclick="fn_update_re(${replyList.rno })">수정</button>
+					</c:if>
+					</form>
 
-		<form action="/ex/delete_reply" method="get">
-		<c:if test= '${replyList.replyer eq writer || authority eq "ADMIN" }'>
-				<input type='hidden' name='rno' value="${replyList.rno}"> 
-		<input type='hidden' name='bno' value="${boardDTO.bno}">  
-		<button type="submit">삭제</button>
-		</c:if></form>
+					<button type="button" onclick="fn_toReply_re(${replyList.rno })"
+						id="testbtn">답글</button>
 
-		</td>
-		</tr>
-		
-		
-		<tr id="testdiv${replyList.rno }" style="display:none">
+					<form action="/ex/delete_reply" method="get">
+						<c:if
+							test='${replyList.replyer eq writer || authority eq "ADMIN" }'>
+							<input type='hidden' name='rno' value="${replyList.rno}">
+							<input type='hidden' name='bno' value="${boardDTO.bno}">
+							<button type="submit">삭제</button>
+						</c:if>
+					</form></td>
+			</tr>
+
+
+			<tr id="testdiv${replyList.rno }" style="display: none">
 				<form action="/ex/insert_reply_re">
-				<input type="hidden" name='grpno' value="${replyList.grpno }">
-				<input type="hidden" name='depth' value="${replyList.depth }">
-				<input type="hidden" name='grpord' value="${replyList.grpord }">
-				<td>
-				<input type="text" name="replyer" value="${writer }" readonly>
-				</td>
-				
-				<td colspan = '2'>
-				<textarea name="replytext" placeholder="댓글내용" required></textarea>
-				</td>
-				
-				<td>
-				<input type='hidden' name='bno' value="${boardDTO.bno}"> 
-					<button type="submit">댓글등록</button>
+					<input type="hidden" name='grpno' value="${replyList.grpno }">
+					<input type="hidden" name='depth' value="${replyList.depth }">
+					<input type="hidden" name='grpord' value="${replyList.grpord }">
+					<td><input type="text" name="replyer" value="${writer }"
+						readonly></td>
+
+					<td colspan='2'><textarea name="replytext" placeholder="댓글내용"
+							required></textarea></td>
+
+					<td><input type='hidden' name='bno' value="${boardDTO.bno}">
+						<button type="submit">댓글등록</button>
 				</form>
 				</td>
 
-				</tr>
+			</tr>
 
 
 
-				</c:forEach>
+		</c:forEach>
+	</tbody>
+	<tfoot>
+
+	</tfoot>
+</table>
+<c:if test='${not empty pollList }'>
+	<form action="/ex/vote" method="get">
+		<h2>
+			Poll
+			<table>
+				<thead>
+					<tr>
+						<td colspan=2>투표</td>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td><input type="text" name="pollTitle" value="${pollTitle }"
+							readonly></td>
+						<td><label for="endtime">종료시간</label><input
+							type="datetime-local" name="endtime" value="${endtime }" readonly></td>
+					</tr>
+
+					<c:forEach var="pollList" items="${pollList }">
+					<tr>
+						
+								<td>	
+								<label><input type="radio" name="item"
+										value="${pollList.item }">${pollList.item }</label>
+								
+										</td>
+										<td>	
+								<input type="text" name="vote_cnt"
+										value="${pollList.vote_cnt }" readonly>
+								
+										</td>
+							
+						
+					</tr>
+					</c:forEach>
+
 				</tbody>
 				<tfoot>
-			
+				
+					<tr>
+						<td><input type='hidden' name='bno' value="${boardDTO.bno}">
+							<button type="submit">vote</button></td>
+					</tr>
 				</tfoot>
-				</table>
+			</table>
 
-			<!-- /.box-body 
+		</h2>
+	</form>
+</c:if>
+<!-- /.box-body 
 			<div class="box-footer">
 				<button type="submit" class="btnModify">Modify</button>
 				<button type="submit" class="btnRemove">REMOVE</button>
@@ -386,7 +439,7 @@ function printPaging(pageMaker){
 					<button type="button" id='closeBtn'>Close</button>
 				</div>
 			</div> -->
-			
+
 <!-- upload start
 <style>
 .fileDrop {
@@ -404,7 +457,7 @@ small {
 	<div class='fileDrop'></div>
 
 	<div class='uploadedList'></div>-->
-	<script>
+<script>
 	function uploadListAll(){
 		var formData = new FormData();
 		formData.append("bno","${boardDTO.bno}")
@@ -536,7 +589,7 @@ small {
 			
 		</script>
 
-		
+
 <!-- upload end 
 			<h2>Ajax Test Page</h2>
 			<div>

@@ -28,6 +28,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.FileCopyUtils;
+import org.springframework.util.StringUtils;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -76,8 +78,6 @@ public class HomeController {
 	@RequestMapping(value = "/tosignUp", method = RequestMethod.GET)
 	public String toSignUp(Locale locale, Model model) {
 		logger.info("SignUp Page", locale);
-
-		
 		return "signUp";
 	}
 	
@@ -173,7 +173,7 @@ public class HomeController {
 	
 	@RequestMapping(value = "/read", method = RequestMethod.GET)
 	public void read(@RequestParam("bno") int bno, ReplyDTO reply,
-			BoardDTO board, UploadDTO upload, PageMaker pm,Model model, Authentication authentication) throws Exception {
+			BoardDTO board, UploadDTO upload, PollDTO poll, PageMaker pm,Model model, Authentication authentication) throws Exception {
 		System.out.println(pm);
 		model.addAttribute(bm.read(bno));
 		model.addAttribute("bno", bno);
@@ -192,7 +192,21 @@ public class HomeController {
 		List<UploadDTO> imageList = us.getFiles(bno);
 		model.addAttribute("imageList", imageList);
 		System.out.println("이미지:"+imageList);
+		List<PollDTO> pollList = ps.getPolls(bno);
 
+		if(pollList.size()!=0) {
+			String pollTitle = pollList.get(0).getPollTitle();
+			LocalDateTime endtime = pollList.get(0).getEndtime();
+			model.addAttribute("pollList", pollList);
+			System.out.println(pollList);
+			model.addAttribute("pollTitle",pollTitle);
+			model.addAttribute("endtime", endtime);
+
+		}
+		
+
+		
+//		model.addAttribute("items", items);
 		//return "/sboard/read
 	}
 	
@@ -308,6 +322,16 @@ public class HomeController {
 		return "write";
 	}
 	
+	@RequestMapping(value = "/vote", method = RequestMethod.GET)
+	public String vote(@RequestParam("bno") int bno, PollDTO poll, Locale locale) throws Exception {
+		logger.info("VOTE Success", locale);
+		
+		System.out.println(poll);
+		ps.update_vote_cnt(poll);
+
+		return "redirect:/read?bno="+bno;
+	}
+	
 	
 	@RequestMapping(value = "/toRewrite", method = RequestMethod.GET)
 	public String toRewrite(@RequestParam("grpno") int grpno,@RequestParam("depth") int depth,@RequestParam("grpord") int grpord ,Locale locale, Model model,Authentication authentication) {
@@ -338,20 +362,75 @@ public class HomeController {
 		return "redirect:/success";
 	}
 	@RequestMapping(value = "/toModify", method = RequestMethod.GET)
-	public String toModify(Locale locale,BoardDTO board, PageMaker pm,Model model) throws Exception {
+	public String toModify(PollDTO poll, @RequestParam("bno") int bno,Locale locale,BoardDTO board, PageMaker pm,Model model) throws Exception {
 		logger.info("To Modify Page", locale);
 		System.out.println(pm);
 		model.addAttribute("board", board);
+		List<UploadDTO> imageList = us.getFiles(bno);
+		System.out.println("------------------------------------[");
+		for(int i = 0 ; i < imageList.size(); i++) {
+		System.out.println( i + "번째 : " + imageList.get(i));
+		}
+		System.out.println("------------------------------------[");
+		model.addAttribute("imageList", imageList);
+		List<PollDTO> pollList = ps.getPolls(bno);
+
+		if(pollList.size()!=0) {
+			String pollTitle = pollList.get(0).getPollTitle();
+			LocalDateTime endtime = pollList.get(0).getEndtime();
+			model.addAttribute("pollList", pollList);
+			System.out.println(pollList);
+			model.addAttribute("pollTitle",pollTitle);
+			model.addAttribute("endtime", endtime);
+			System.out.println("시간불러오기:"+endtime);
+
+		}
 		
 		return "modify";
 	}
 	
-	@RequestMapping(value = "/modify", method = RequestMethod.GET)
-	public String modify(Locale locale, BoardDTO vo) throws Exception {
+	@RequestMapping(value = "/modify", method = RequestMethod.POST)
+	public String modify(UploadDTO uo,MultipartFile[] file,@RequestParam(value="deleteattno",required = false) int[] attnolist,Locale locale, BoardDTO vo, PollDTO po) throws Exception {
 		logger.info("Success modify", locale);
+		
+		if(attnolist!=null) {
+			for(int attno:attnolist) {
+				System.out.println("파일삭제:"+attno);
+				us.deleteFile(attno);
+			}
+			}
+		
+		String savedPath =  "C:\\SPFile";
+
+		for (MultipartFile file1 : file) {
+		if(!file1.getOriginalFilename().equals("")) {
+		UploadDTO dto = uo;
+		String savedName = System.currentTimeMillis() + "_" + file1.getOriginalFilename();
+		File target = new File(savedPath, savedName);
+		FileCopyUtils.copy(file1.getBytes(), target);
+		dto.setFilename(savedName);
+		us.modifyadd(uo);
+		}
+		}
+		
+		
+
+		if(po.getItem()!=null) {
+		String[] itemlist=po.getItem().split(",");
+		String[] pnolist=po.getPno().split(",");
+		String[] cntlist=po.getVote_cnt().split(",");
+		for(int i=0; i<itemlist.length;i++) {
+			System.out.println(po);
+			PollDTO dto = po;
+			dto.setItem(itemlist[i]);
+			dto.setPno(pnolist[i]);
+			dto.setVote_cnt(cntlist[i]);
+			System.out.println("asdasdasd"+dto);
+			ps.update_poll(dto);
+		}
+		}
 		bm.modify(vo);
-		System.out.println(vo);
-		return "redirect:/success";
+		return "redirect://read?bno="+vo.getBno();
 	}
 	
 	@RequestMapping(value = "/remove", method = RequestMethod.GET)
@@ -474,6 +553,7 @@ public class HomeController {
 		us.addFile(savedName);
 		return new ResponseEntity<>(savedName, HttpStatus.CREATED);
 	}
+
 	
 	
 	
