@@ -1,3 +1,5 @@
 eclipse.preferences.version=1
+encoding//src/main/webapp/WEB-INF/views/include/sidebar1.jsp=UTF-8
 encoding//src/main/webapp/WEB-INF/views/poll.jsp=UTF-8
 encoding//src/main/webapp/WEB-INF/views/signUp.jsp=UTF-8
+encoding//src/main/webapp/WEB-INF/views/success.jsp=UTF-8

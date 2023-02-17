@@ -3,7 +3,13 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <html>
 <head>
+<link href="../CSS/sp.css" rel="stylesheet">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 	<title>Home</title>
+	<link rel="canonical" href="https://getbootstrap.com/docs/5.2/examples/album/">
+	<link href="../assets/dist/css/bootstrap.min.css" rel="stylesheet">
 	<script>
     if(<%=request.getParameter("isSuccess")%>==true){
        alert('가입이 완료되었습니다.');
