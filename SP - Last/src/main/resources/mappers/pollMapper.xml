@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sp.dao.PollDAO">
+<select id="getPolls" resultType="PollDTO">
+select * from tbl_poll where bno = #{bno} order by pno
+</select>
+<select id="sum_vote_cnt" resultType="int">
+select sum(vote_cnt) from tbl_poll where bno = #{bno} order by pno
+</select>
+<select id="select_vote_cnt" resultType="int">
+select vote_cnt from tbl_poll where bno = #{bno} order by pno
+</select>
+<delete id="deletepoll">
+delete from tbl_poll where bno = #{bno}
+</delete>
+<insert id="addPoll">
+insert into tbl_poll(bno,pno,endtime,polltitle,item,vote_cnt) values ((select max(bno) from tbl_board), (select nvl(max(pno),0)+1 from tbl_poll where polltitle=#{pollTitle}),#{endtime},#{pollTitle},#{item},0)
+</insert>
+<update id="update_vote_cnt">
+update tbl_poll set vote_cnt=vote_cnt+1
+where bno=#{bno} and item=#{item}
+</update>
+<insert id="update_addPoll">
+insert into tbl_poll(bno,pno,endtime,polltitle,item,vote_cnt) values (#{bno}, #{pno}, #{endtime},#{pollTitle},#{item},0)
+</insert>
+
+</mapper>
+
+
+
+
+
+
+
+
+
+

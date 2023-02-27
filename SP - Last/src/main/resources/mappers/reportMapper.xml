@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sp.dao.ReportDAO">
+	<select id="board_list" resultType="ReportDTO">
+		select
+		*
+		from
+		tbl_report
+		where
+		rno is
+		null
+		ORDER BY bno DESC
+	</select>
+	<select id="reply_list" resultType="ReportDTO">
+		select
+		*
+		from
+		tbl_report
+		where
+		rno is not
+		null
+		ORDER BY bno DESC
+	</select>
+
+	<insert id="insert_report">
+		insert into
+		tbl_report(bno,rno,reporter,reason)
+		values
+		(#{bno},#{rno,jdbcType=VARCHAR},#{reporter},#{reason})
+	</insert>
+	<delete id="delete_reported">
+		delete from tbl_report where bno =#{bno} or rno
+		=#{rno}
+	</delete>
+
+</mapper>
+

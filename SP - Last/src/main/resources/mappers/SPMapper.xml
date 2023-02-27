@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sp.dao.ISPDao">
+<insert id="signUp">
+insert into MEMINFO values(#{id},#{pw},#{name},#{birth},#{postcode},#{address1},#{address2}, #{phone})
+</insert>
+<insert id="insert_authority">
+insert into authorities values(#{id},'MEMBER')
+</insert>
+<select id="select_authority" resultType="String">
+select authority from authorities where id=#{id}
+</select>
+<select id="check_id" resultType="int">
+select count(id) from MEMINFO where id=#{id}
+</select>
+<select id="find_id" resultType="String">
+select id from MEMINFO where name=#{name} and phone=#{phone}
+</select>
+<select id="find_pw" resultType="String">
+select pw from MEMINFO where name=#{name} and id=#{id} and phone=#{phone}
+</select>
+<select id="select_info" resultType="SPDto">
+select * from MEMINFO where id=#{id}
+</select>
+<update id="info_update">
+update MEMINFO set pw=#{pw}, name=#{name}, birth=#{birth}, postcode=#{postcode}, address1=#{address1},address2=#{address2}, phone=#{phone} where id=#{id}
+</update>
+<delete id="info_delete">
+delete MEMINFO where id=#{id}
+</delete>
+
+
+</mapper>
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 

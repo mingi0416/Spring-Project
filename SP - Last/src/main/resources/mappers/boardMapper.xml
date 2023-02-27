@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sp.dao.BoardDAO">
+<insert id="create">
+insert into tbl_board(bno,title,content,writer,regdate,viewcnt,grpno,grpord,depth)
+values (bno_counter.nextval,#{title},#{content},#{writer},sysdate,0,grpno_counter.nextval,0,0)
+</insert>
+<insert id="create_re">
+insert into tbl_board(bno,title,content,writer,regdate,viewcnt,grpno,grpord,depth)
+values (bno_counter.nextval,#{title},#{content},#{writer},sysdate,0,#{grpno},(select nvl(max(grpord),0)+1 from tbl_board where grpno=#{grpno}),#{depth}+1)
+</insert>
+
+<insert id="create_rere">
+insert into tbl_board(bno,title,content,writer,regdate,viewcnt,grpno,grpord,depth)
+values (bno_counter.nextval,#{title},#{content},#{writer},sysdate,0,#{grpno},#{grpord}+1,#{depth}+1)
+</insert>
+
+<select id="read" resultType="BoardDTO">
+select * from tbl_board where bno=#{bno}
+</select>
+<select id="select_depth" resultType="int">
+select depth from tbl_board where bno=#{bno}
+</select>
+<update id="update">
+update tbl_board set title=#{title},content=#{content} 
+where bno=#{bno}
+</update>
+
+<update id="update_re">
+update tbl_board set grpord=grpord+1
+where grpno=#{grpno} and grpord>#{grpord}
+</update>
+
+<update id="update_vct">
+update tbl_board set viewcnt=(select nvl(max(viewcnt),0)+1 from tbl_board where bno=#{bno}) where bno=#{bno}
+</update>
+<update id="update_report">
+update tbl_board set report=report+1
+where bno=#{bno}
+</update>
+<update id="delete_reportcnt">
+update tbl_board set report=0 where bno=#{bno}
+</update>
+<delete id="delete">
+delete from tbl_board where bno=#{bno}
+</delete>
+<select id="select_authority" resultType="String">
+select authority from authorities where id=(select id from meminfo where id=#{id})
+</select>
+
+<sql id='search'>
+	<if test="searchType!=null">
+		<if test="searchType == 't'.toString()"> and title like '%'|| #{keyword}||'%' </if>
+		<if test="searchType == 'c'.toString()"> and content like '%'|| #{keyword}||'%' </if>
+		<if test="searchType == 'w'.toString()"> and writer like '%'|| #{keyword}||'%' </if>
+		<if test="searchType == 'tc'.toString()"> and ( title like '%'|| #{keyword}||'%' OR content like '%'|| #{keyword}||'%') </if>
+		<if test="searchType == 'cw'.toString()"> and ( content like '%'|| #{keyword}||'%' OR writer like '%'|| #{keyword}||'%') </if>
+		<if test="searchType == 'tcw'.toString()"> and ( title like '%'|| #{keyword}||'%' OR content like '%'|| #{keyword}||'%' OR writer like '%'|| #{keyword}||'%') </if>
+	</if>
+</sql>
+
+<select id="listSearch" resultType="com.sp.dto.BoardDTO">
+<![CDATA[select bno, title, content, writer, viewcnt, regdate, grpno, grpord, depth from
+(select /*+INDEX_DESC(tbl_board,pk_board)*/ 
+rownum rn,bno,title,content,writer,viewcnt,regdate,grpno,grpord,depth
+from tbl_board where 1=1]]> 
+<include refid="search"/>
+<![CDATA[ORDER BY grpno DESC, grpord asc,depth ASC) where rownum <= #{perPageNum} and bno > 0 
+and rn > (#{page} -1) * #{perPageNum}]]>
+</select>
+<!-- <select id="listSearch" resultType="com.human.dto.BoardDTO">
+<![CDATA[select bno, title, content, writer, viewcnt, regdate from
+(select /*+INDEX_DESC(tbl_board,pk_board)*/ 
+rownum rn,bno,title,content,writer,viewcnt,regdate
+from tbl_board where 1=1 ]]>
+<include refid="search"/>
+<![CDATA[ and rownum <= #{page} * #{perPageNum} and bno > 0 ) 
+where rn > (#{page} -1) * #{perPageNum}]]>
+</select> -->
+
+
+
+<select id="listSearchCount" resultType="int">
+<![CDATA[ select count(bno) from tbl_board where 1=1 ]]>
+<include refid="search"/>
+<![CDATA[ and bno > 0 ]]>
+</select>
+
+</mapper>
+
+
+
+
+
+
+
+
+
+

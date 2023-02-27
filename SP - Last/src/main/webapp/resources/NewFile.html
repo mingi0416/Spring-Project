@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<div>
+	<c:if test='${boardDTO.writer eq writer }'>
+		<form action="/ex/toModify" method="get">
+			
+				<input type="hidden" name="${_csrf.parameterName}"
+					value="${_csrf.token}" />
+				<input type='hidden' name='bno' value="${boardDTO.bno}">
+				<input type='hidden' name='page' value="${pageMaker.page}">
+				<input type='hidden' name='perPageNum'
+					value="${pageMaker.perPageNum}">
+				<input type='hidden' name='searchType'
+					value="${pageMaker.searchType}">
+				<input type='hidden' name='keyword' value="${pageMaker.keyword}">
+				<input type="hidden" class="form-control" name='title'
+					placeholder="제목을 입력해 주세요" style="width: 100%"
+					value="${boardDTO.title}" required>
+				<input type="hidden" name="writer" class="form-control"
+					value="${writer }" readonly>
+				<input type="hidden" id="pollTitle" name="pollTitle"
+					value="${pollTitle }" readonly />
+				<input type="hidden" id="endtime" name="endtime" value="${endtime }"
+					readonly />
+
+			 <c:forEach var="pollList" items="${pollList }">
+					 <input type="hidden" name="pno" value="${pollList.pno }">
+					<input type="hidden" name="item" value="${pollList.item }">
+							&nbsp;<input type="hidden" name="vote_cnt"
+						value="${pollList.vote_cnt }" readonly> 
+				</c:forEach>
+				<input type="hidden" class="form-control" name='content'
+					value="${boardDTO.content}" required> 
+				<button type="submit" class="btn btn-secondary" style="float: left">ToModify123</button>
+
+					</form>
+					</c:if>
+					
+		<form action="/ex/remove" method="get">
+			<c:if test='${boardDTO.writer eq writer || authority eq "ADMIN" }'>
+
+				<input type='hidden' name='bno' value="${boardDTO.bno}">
+				<button type="submit" class="btn btn-secondary" style="float: left">REMOVE</button>
+
+			</c:if>
+		</form>
+
+		<form action="/ex/toRewrite" method="get">
+			<input type='hidden' name='grpno' value="${boardDTO.grpno}">
+			<input type='hidden' name='depth' value="${boardDTO.depth}">
+			<input type="hidden" name='grpord' value="${boardDTO.grpord }">
+			<button type="submit" class="btn btn-secondary" style="float: left">답글</button>
+		</form>
+
+
+
+		<form action="/ex/list" method="get">
+			<button type="submit" class="btn btn-secondary">LIST ALL</button>
+		</form>
+	</div>
+</body>
+</html>
